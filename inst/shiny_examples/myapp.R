@@ -8,16 +8,16 @@
 #
 
 ui <- fluidPage(
-  
+
   # App title ----
   titlePanel("Uploading Files"),
-  
+
   # Sidebar layout with input and output definitions ----
   sidebarLayout(
-    
+
     # Sidebar panel for inputs ----
     sidebarPanel(
-      
+
       fileInput('xtrain', 'X train',
                 multiple = T, accept = c("text/csv",
                                          "text/comma-separated-values,text/plain",
@@ -60,10 +60,10 @@ ui <- fluidPage(
                   min = 0, max = 1, value = .2),
       actionButton('submit', 'Ready? Go!')
     ),
-    
+
     # Main panel for displaying outputs ----
     mainPanel(
-      
+
       # Output: Data file ----
       h4('Plot'),
       plotOutput('predplot'),
@@ -73,31 +73,31 @@ ui <- fluidPage(
       downloadButton('coefficients.csv', 'Download coefficients including intercept'),
       downloadButton('features.csv', 'Download selected features')
     )
-    
+
   )
 )
 
 # Define server logic to read selected file ----
 server <- function(input, output) {
-  
+
   model <- eventReactive(input$submit, {
     req(input$xtrain)
     req(input$xtest)
     req(input$ytrain)
     req(input$ytest)
-    x_train <- as.matrix(data.table::fread(input$xtrain$datapath))
-    x_test <- as.matrix(data.table::fread(input$xtest$datapath))
+    x_train <- as.matrix(fread(input$xtrain$datapath))
+    x_test <- as.matrix(fread(input$xtest$datapath))
     varnam <- colnames(x_train)
     if (input$fam == 'Cox') {
-      y_train <- Surv(as.matrix(data.table::fread(input$ytrain$datapath)))
-      y_test <- as.matrix(data.table::fread(input$ytest$datapath))
+      y_train <- Surv(as.matrix(fread(input$ytrain$datapath)))
+      y_test <- as.matrix(fread(input$ytest$datapath))
     } else {
-      y_train <- data.table::fread(input$ytrain$datapath, data.table = F)[, 1]
-      y_test <- data.table::fread(input$ytest$datapath, data.table = F)[, 1]
+      y_train <- fread(input$ytrain$datapath, data.table = F)[, 1]
+      y_test <- fread(input$ytest$datapath, data.table = F)[, 1]
     }
-    
+
     if(!is.null(input$L)) {
-      L <- as.matrix(data.table::fread(input$L$datapath))
+      L <- as.matrix(fread(input$L$datapath))
     } else {
       if (input$est == 'Estimated') {
         L <- getS(x_train)
@@ -112,9 +112,9 @@ server <- function(input, output) {
                    cv = cv_glmaag(y_train, x_train, L, fam = input$fam, nfolds = input$nfolds, measdev = meas, type1se = type1se, adaptl1 = input$al1, adaptl2 = input$al2, parallel = input$parallel),
                    ss = ss_glmaag(y_train, x_train, L, fam = input$fam, nfolds = input$nfolds, nsam = input$nsam, beta = input$beta, type1se = type1se, adaptl1 = input$al1, adaptl2 = input$al2, parallel = input$parallel)
     )
-    
+
     ypre <- predict(mod, x_test, type = 'response')
-    
+
     if (input$fam == 'Gaussian') {
       plotobj <- ggplot2::qplot(y_test, ypre) + ggplot2::xlab('true value') + ggplot2::ylab('predicted value') + ggplot2::geom_abline(intercept = 0, slope = 1, color = 'grey') + ggplot2::geom_smooth(method = 'lm') + ggplot2::theme_bw()
     } else if(input$fam == 'Logistic') {
@@ -127,7 +127,7 @@ server <- function(input, output) {
       test1 <- y_test[, 1]
       test2 <- y_test[, 2]
       group <- as.numeric(ypre <= cutp)
-      datsurvtest <- data.table::data.table(test1 = test1, test2 = test2, group = group)
+      datsurvtest <- data.table(test1 = test1, test2 = test2, group = group)
       plotobj <- survminer::ggsurvplot(survminer::surv_fit(Surv(test1, test2) ~ group, data = datsurvtest), risk.table = T, conf.int = T, legend.labs = c('high risk', 'low risk'), pval = T, ggtheme = ggplot2::theme_bw())
     }
     datab <- switch (input$fam,
@@ -152,40 +152,40 @@ server <- function(input, output) {
     } else {
       names(coefmod) <- c('Intercept', varnam)
     }
-    list(plotobj = plotobj, datab = datab, coefs = data.table::data.table(t(coefmod)), selvar = data.table::data.table(feature))
+    list(plotobj = plotobj, datab = datab, coefs = data.table(t(coefmod)), selvar = data.table(feature))
   })
-  
+
   output$predplot <- renderPlot({
-    
+
     # input$file1 will be NULL initially. After the user selects
     # and uploads a file, head of that data file by default,
     # or all rows if selected, will be shown.
-    
+
     model()$plotobj
   })
-  
+
   output$predtab <- renderTable({
     model()$datab
   })
-  
+
   output$coefficients.csv <- downloadHandler(
     filename = function() {
       paste('coefficients.csv')
     },
     content = function(filename) {
-      data.table::fwrite(model()$coefs, filename)
+      fwrite(model()$coefs, filename)
     }
   )
-  
+
   output$features.csv <- downloadHandler(
     filename = function() {
       paste('features.csv')
     },
     content = function(filename) {
-      data.table::fwrite(model()$selvar, filename)
+      fwrite(model()$selvar, filename)
     }
   )
 }
-# Run the application 
+# Run the application
 shinyApp(ui = ui, server = server)
 

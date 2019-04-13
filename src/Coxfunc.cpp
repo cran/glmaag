@@ -36,7 +36,7 @@ double cidx(int n, vec score, vec& time, vec& del) {
 		while (t2 != t1) {
 			sct = tsign(*t1, *d1, *t2++, *d2++);
 			up += sct*getsign(*s2++ - *s1);
-			down += fabs(sct);
+			down += abs(sct);
 		}
 		++t1;
 		++d1;

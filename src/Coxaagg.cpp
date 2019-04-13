@@ -491,7 +491,7 @@ arma::cube ssCoxaagg_pal(int ntietr, arma::vec b, arma::vec w, arma::mat xtr, bo
 	mat ll = l + diagmat(dl);
 	vec lpie, apie, m0(p), m01(p), mmm, ddtr, time;
 	cube ssn = zeros<cube>(p, k1, k2);
-	vec::iterator lam1e = lam1.end(), lam2point = lam2.begin(), lam1point;
+	vec::iterator lam2point = lam2.begin(), lam1point;
 	if (tietr) {
 		ddtr = getdd(deltr, tie1tr, tie2tr, tie3tr);
 	}

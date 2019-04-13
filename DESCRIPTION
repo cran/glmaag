@@ -1,8 +1,8 @@
 Package: glmaag
 Type: Package
 Title: Adaptive LASSO and Network Regularized Generalized Linear Models
-Version: 0.0.3
-Date: 2019-04-08
+Version: 0.0.4
+Date: 2019-04-12
 Author: Kaiqiao Li [aut, cre],
   Pei Fen Kuan [aut],
   Xuefeng Wang [aut]
@@ -11,13 +11,13 @@ Description: Efficient procedures for adaptive LASSO and network regularized for
 License: MIT + file LICENSE
 Imports: Rcpp (>= 1.0.0), methods, stats, Matrix, ggplot2, gridExtra,
         maxstat, survminer, plotROC, shiny, foreach, pROC, huge,
-        OptimalCutpoints, data.table
+        OptimalCutpoints
 LinkingTo: Rcpp, RcppArmadillo
-Depends: R (>= 3.5.0), survival
+Depends: R (>= 3.5.0), survival, data.table
 Suggests: knitr, rmarkdown
 VignetteBuilder: knitr
 RoxygenNote: 6.1.1
 NeedsCompilation: yes
-Packaged: 2019-04-09 16:54:37 UTC; lik15
+Packaged: 2019-04-12 15:10:41 UTC; lik15
 Repository: CRAN
-Date/Publication: 2019-04-11 14:22:37 UTC
+Date/Publication: 2019-04-13 23:32:36 UTC
