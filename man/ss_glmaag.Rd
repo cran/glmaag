@@ -89,11 +89,11 @@ Do stability selection for glmaag
 data(sampledata)
 data(L0)
 y <- sampledata$Y_Gau
-x <- sampledata[, -(1:3)]
-mod <- ss_glmaag(y, x, L0, nsam = 3)
+x <- sampledata[, 4:6]
+mod <- ss_glmaag(y, x, L0[seq_len(3), seq_len(3)], nsam = 3)
 }
 \references{
-Meinshausen, N., & B{\"u}hlmann, P. (2010). Stability selection. Journal of the Royal Statistical Society: Series B (Statistical Methodology), 72(4), 417-473.
+Meinshausen, N., & B{"u}hlmann, P. (2010). Stability selection. Journal of the Royal Statistical Society: Series B (Statistical Methodology), 72(4), 417-473.
 
 Liu, H., Roeder, K., & Wasserman, L. (2010). Stability approach to regularization selection (stars) for high dimensional graphical models. In Advances in neural information processing systems (pp. 1432-1440).
 }

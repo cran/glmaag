@@ -24,5 +24,5 @@ ss <- getS(xx, FALSE)
 \references{
 Ucar D, Neuhaus I, Ross-MacDonald P, Tilford C, Parthasarathy S, et al. (2007) Construction of a reference gene association network from multiple profiling data: application to data analysis. Bioinformatics 23: 2716-2724.
 
-Meinshausen, N., & B{\"u}hlmann, P. (2006). High-dimensional graphs and variable selection with the lasso. The annals of statistics, 1436-1462.
+Meinshausen, N., & B{"u}hlmann, P. (2006). High-dimensional graphs and variable selection with the lasso. The annals of statistics, 1436-1462.
 }
